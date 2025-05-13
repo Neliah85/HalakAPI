@@ -63,28 +63,29 @@ namespace HalakAPI.Controllers
             }
         }
 
-        [HttpPut()]
-        public IActionResult Put(int id)
+        [HttpPut("Halak")]
+        public async Task<IActionResult> Put(Halak hal)
         {
-           
-            using var context = new HalakContext();
             try
             {
-                
-                var hal = context.Halaks.id();
-                if (hal == null)
+                using (var cx = new HalakContext())
                 {
-                    return NotFound("Nincs ilyen azonosítójú hal!");
-                }                               
-              
-                context.SaveChanges();
-
-                return Ok("Sikeres módosítás");
+                    var response = cx.Halaks.FirstOrDefault(x => x.Id == hal.Id);
+                    if (response != null)
+                    {
+                        cx.Halaks.Update(hal);
+                        await cx.SaveChangesAsync();
+                        return Ok("Hal módosítása sikeresen megtörtént.");
+                    }
+                    else
+                    {
+                        return NotFound("Nincs ilyen azonosítójú hal!");
+                    }
+                }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                
-                return StatusCode(StatusCodes.Status400BadRequest, ex.Message);
+                return StatusCode(404, "Nincs azonosítójú hal!");
             }
         }
 
