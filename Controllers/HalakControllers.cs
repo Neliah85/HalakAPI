@@ -2,36 +2,47 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using HalakAPI.Models;
+using HalakAPI.DTOs;
 
 namespace HalakAPI.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class Halak : ControllerBase
+    public class HalakControllers : ControllerBase
     {
-
         [HttpGet("FajMeretTo")]
-
-        public IActionResult GetHalakFajMeretTo()
+        public IActionResult GetFajMeretTo()
         {
-            using (var context = new HalakContext())
+            try
             {
-                try
+                using (var cx = new HalakContext())
                 {
-                    var halak = context.Halaks.ToList();
-                    return Ok(context.Halaks.Select(k => new
-                    {
-                        k.Faj,
-                        k.MeretCm,
-                        k.To,
-                    }).ToList());
+                    var response = cx.Halaks
+                        .Select(x => new
+                        {
+                            x.Faj,
+                            x.MeretCm,
+                            x.To.Nev
+                        })
+                        .ToList();
+                    return Ok(response);
                 }
-                catch (Exception ex)
-                {
-                    return StatusCode(StatusCodes.Status400BadRequest, ex.Message);
-                }
+
+                /* VAAGY
+                 var response = cx.Halaks.Include(x => x.To).Select(f=>new FajMeretTo{Faj=f.Faj,
+                     MeretCm=f.MeretCm,
+                     ToNev=f.To.Nev
+                 }).ToList();
+                    return Ok(response);                     
+                 */
+            }
+            catch (Exception)
+            {
+                return StatusCode(400);
             }
         }
+
+
         [HttpPut()]
         public IActionResult Put()
         {

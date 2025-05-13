@@ -8,7 +8,7 @@ namespace HalakAPI.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class Horgaszok : ControllerBase
+    public class HorgaszokControllers : ControllerBase
     {
         [HttpGet("All")]
 
@@ -42,7 +42,7 @@ namespace HalakAPI.Controllers
                     var horgaszok = context.Horgaszoks.Find(id);
                     if (horgaszok == null)
                     {
-                        return NotFound("Nincs ilyen azonosítójú horgász.");
+                        return StatusCode(404, "Nincs ilyen azonosítójú horgász!");
                     }
                     return Ok(horgaszok);
                 }
