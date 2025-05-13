@@ -42,17 +42,36 @@ namespace HalakAPI.Controllers
             }
         }
 
+        [HttpPost]
 
+        public IActionResult PostHalak(string uid, Halak hal)
+        {
+            try
+            {
+                if (Program.UID == uid)
+                    return StatusCode(401);
+                using (var cx = new HalakContext())
+                {
+                    cx.Halaks.Add(hal);
+                    cx.SaveChanges();
+                    return Ok("Hal hozzáadása sikeresen megtörtént.");
+                }
+            }
+            catch (Exception)
+            {
+                return StatusCode(401, "Nincs jogosultsága új hal felvételéhez!");
+            }
+        }
 
         [HttpPut()]
-        public IActionResult Put()
+        public IActionResult Put(int id)
         {
            
             using var context = new HalakContext();
             try
             {
                 
-                var hal = context.Halaks.FirstOrDefault();
+                var hal = context.Halaks.id();
                 if (hal == null)
                 {
                     return NotFound("Nincs ilyen azonosítójú hal!");
