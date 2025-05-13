@@ -89,6 +89,32 @@ namespace HalakAPI.Controllers
             }
         }
 
+        /*[HttpDelete("Halak")]
+        public async Task<IActionResult> Delete(Halak hal)
+        {
+            try
+            {
+                using (var cx = new HalakContext())
+                {
+                    var response = cx.Halaks.FirstOrDefault(x => x.Id == hal.Id);
+                    if (response != null)
+                    {
+                        cx.Halaks.Remove(new Halak {Id = id);
+                        await cx.SaveChangesAsync();
+                        return Ok("Hal törlése sikeresen megtörtént.");
+                    }
+                    else
+                    {
+                        return NotFound("Nincs ilyen azonosítójú hal!");
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                return StatusCode(404, "Nincs azonosítójú hal!");
+            }
+        }
+        */
         [HttpDelete()]
         public IActionResult DelById(int id)
         {
